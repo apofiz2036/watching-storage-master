@@ -11,22 +11,8 @@ def format_duration(duration):
     return f'{int(hours)} часов {int(minutes)} минут {int(seconds)} секунд'
 
 
-def is_visit_long(visit, minutes=60):
-    entered_time = localtime(visit.entered_at)
-    leaved_time = visit.leaved_at
-    if leaved_time:
-        leaved_time = localtime(leaved_time)
-        different = (leaved_time-entered_time).total_seconds()
-    else:
-        different = (now()-entered_time).total_seconds()
-
-    visit_data = {
-        'entered_at': entered_time,
-        'duration': format_duration(different),
-        'is_strange': different > minutes * 60
-    }
-
-    return visit_data
+def is_visit_long(different, minutes=60):
+    return different > minutes * 60
 
 
 def passcard_info_view(request, passcode):
@@ -34,7 +20,20 @@ def passcard_info_view(request, passcode):
     this_passcard_visits = []
 
     for visit in Visit.objects.filter(passcard=passcard):
-        this_passcard_visits.append(is_visit_long(visit))
+        entered_time = localtime(visit.entered_at)
+        leaved_time = visit.leaved_at
+        if leaved_time:
+            leaved_time = localtime(leaved_time)
+            different = (leaved_time-entered_time).total_seconds()
+        else:
+            different = (now()-entered_time).total_seconds()
+
+        if is_visit_long(different):
+            this_passcard_visits.append({
+                'entered_at': entered_time,
+                'duration': format_duration(different),
+                'is_strange': True
+            })
 
     context = {
         'passcard': passcard,
