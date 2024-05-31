@@ -29,9 +29,3 @@ class Visit(models.Model):
                 if self.leaved_at else 'not leaved'
             )
         )
-
-
-def get_duration(visit):
-    entered_time = localtime(visit.entered_at)
-    different = (now() - entered_time).total_seconds()
-    return different

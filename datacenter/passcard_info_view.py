@@ -3,16 +3,7 @@ from datacenter.models import Visit
 from django.shortcuts import render
 from django.utils.timezone import now, localtime
 from django.shortcuts import get_object_or_404
-
-
-def format_duration(duration):
-    hours, remainder = divmod(duration, 3600)
-    minutes, seconds = divmod(remainder, 60)
-    return f'{int(hours)} часов {int(minutes)} минут {int(seconds)} секунд'
-
-
-def is_visit_long(different, minutes=60):
-    return different > minutes * 60
+from utils import is_visit_long, format_duration
 
 
 def passcard_info_view(request, passcode):
