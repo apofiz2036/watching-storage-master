@@ -1,4 +1,3 @@
-# from datacenter.models import Passcard
 from datacenter.models import Visit
 from datacenter.models import get_duration
 from django.shortcuts import render
